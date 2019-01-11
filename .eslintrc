@@ -1,0 +1,23 @@
+{
+  "extends": "eslint:recommended",
+  "globals": {
+    "console": true,
+    "localStorage": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "error",
+          "info",
+          "warn"
+        ]
+      }
+    ]
+  }
+}

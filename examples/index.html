@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Local Storage Database Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style></style>
+</head>
+
+<body>
+  <div>
+    Tasks
+    <form>
+      <label>Add Task</label>
+      <input type="text" name="task-name" />
+      <input type="submit" value="Save" />
+    </form>
+    <ul></ul>
+  </div>
+  <script src="../dist/umd/LocalStorageDb.js"></script>
+  <script>
+    window.addEventListener('load', function () {
+      let db = undefined;
+
+      LocalStorageDb.connect('test-db', (err, database) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        db = database;
+      });
+
+      console.log(db);
+
+      let tasks = db.collection('tasks').find();
+
+      console.log(tasks);
+
+      const form = document.querySelector('form');
+      const input = document.querySelector('[name="task-name"]');
+
+      console.log(input);
+
+      const onSubmit = evt => {
+        evt.preventDefault();
+
+        const value = input.value;
+
+        db.collection('tasks').save({ name: value }, (err, result) => {
+          console.log('result');
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(result);
+            tasks.push(result);
+            updateList();
+          }
+        });
+      }
+
+      form.addEventListener('submit', onSubmit);
+
+      const updateList = () => {
+        console.log(tasks);
+        const list = document.querySelector('ul');
+        list.innerHTML = '';
+
+        tasks.forEach(element => {
+          let li = document.createElement('li');
+          li.innerHTML = element.name;
+          list.appendChild(li);
+        });
+      }
+
+      updateList();
+
+      //db.findOneAndDelete('tasks', task.id);
+    });
+  </script>
+</body>
+
+</html>
